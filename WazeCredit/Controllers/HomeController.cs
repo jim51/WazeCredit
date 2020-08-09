@@ -18,6 +18,8 @@ namespace WazeCredit.Controllers
     {
         public HomeVM homeVM { get; set; }
 
+        [BindProperty]
+        private CreditApplication CreditModel { get; set; }
 
         /// 設置interface參數
         /// 設置為唯讀以避免被修改
@@ -26,6 +28,7 @@ namespace WazeCredit.Controllers
         private readonly TwilioSettings _twilioOptions;
         private readonly SendGridSettings _sendGridOptions;
         private readonly WazeForecastSettings _wazeForccastOptions;
+
 
         public HomeController(IMarketForecaster marketForecaster, IOptions<WazeForecastSettings> wazeForccastOptions)
         {
@@ -79,6 +82,12 @@ namespace WazeCredit.Controllers
             messages.Add($"Twilio SID: " + twilioOptions.Value.AccountSid);
             messages.Add($"Twilio Token: " + twilioOptions.Value.AuthToken);
             return View(messages);
+        }
+
+        public IActionResult CreditApplication()
+        {
+            CreditModel = new CreditApplication();
+            return View(CreditModel);
         }
 
         public IActionResult Privacy()
