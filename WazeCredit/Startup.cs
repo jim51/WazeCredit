@@ -17,6 +17,7 @@ using WazeCredit.Utiltity.AppSettingsClasses;
 using WazeCredit.Utiltity.DI_Config;
 using WazeCredit.Middleware;
 using WazeCredit.Service.LifeTimeExample;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace WazeCredit
 {
@@ -39,13 +40,16 @@ namespace WazeCredit
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             /// 增加IMarketForecaster注入服務
-            services.AddTransient<IMarketForecaster, MarketForecaster>();
+            services.AddTransient<IMarketForecaster, MarketForecasterV2>();
 
             services.AddAppSettingsConfig(Configuration);
 
             services.AddTransient<TransientService>();
             services.AddSingleton<SingletionService>();
             services.AddScoped<ScopedService>();
+
+            /// TryAddTransient增加IMarketForecaster注入服務(如果沒有的話) 
+            services.TryAddTransient<IMarketForecaster, MarketForecasterV2>();
 
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddRazorPages();
