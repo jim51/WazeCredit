@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using WazeCredit.Data;
 using WazeCredit.Model;
 using WazeCredit.Models;
 using WazeCredit.Models.ViewModels;
@@ -25,21 +26,24 @@ namespace WazeCredit.Controllers
         /// 設置為唯讀以避免被修改
         private readonly IMarketForecaster _marketForecaster;
         private readonly ICreditValidator _creditValidator;
+        private readonly ApplicationDbContext _db;
 
-        private readonly StripeSettings _stripeOptions;
-        private readonly TwilioSettings _twilioOptions;
-        private readonly SendGridSettings _sendGridOptions;
+        //private readonly StripeSettings _stripeOptions;
+        //private readonly TwilioSettings _twilioOptions;
+        //private readonly SendGridSettings _sendGridOptions;
         private readonly WazeForecastSettings _wazeForccastOptions;
 
 
         public HomeController(IMarketForecaster marketForecaster, IOptions<WazeForecastSettings> wazeForccastOptions,
-                ICreditValidator creditValidator
+                ICreditValidator creditValidator,
+                ApplicationDbContext applicationDbContext
             )
         {
             homeVM = new HomeVM();
             _marketForecaster = marketForecaster;
             _wazeForccastOptions = wazeForccastOptions.Value;
             _creditValidator = creditValidator;
+            _db = applicationDbContext;
         }
 
         public IActionResult Index()
@@ -112,6 +116,9 @@ namespace WazeCredit.Controllers
                 };
                 if (validationPassed)
                 {
+                    _db.CreditApplication.Add(CreditModel);
+                    _db.SaveChanges();
+                    creditResult.CreditID = CreditModel.Id;
                     return RedirectToAction(nameof(CreditResult),creditResult);
                 }
                 else
