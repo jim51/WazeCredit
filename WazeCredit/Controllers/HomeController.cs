@@ -27,6 +27,7 @@ namespace WazeCredit.Controllers
         private readonly IMarketForecaster _marketForecaster;
         private readonly ICreditValidator _creditValidator;
         private readonly ApplicationDbContext _db;
+        private readonly ILogger _logger;
 
         //private readonly StripeSettings _stripeOptions;
         //private readonly TwilioSettings _twilioOptions;
@@ -36,18 +37,22 @@ namespace WazeCredit.Controllers
 
         public HomeController(IMarketForecaster marketForecaster, IOptions<WazeForecastSettings> wazeForccastOptions,
                 ICreditValidator creditValidator,
-                ApplicationDbContext applicationDbContext
+                ApplicationDbContext applicationDbContext,
+                ILogger<HomeController> logger
             )
         {
             homeVM = new HomeVM();
+            _logger = logger;
             _marketForecaster = marketForecaster;
             _wazeForccastOptions = wazeForccastOptions.Value;
             _creditValidator = creditValidator;
             _db = applicationDbContext;
+           
         }
 
         public IActionResult Index()
         {
+            _logger.LogInformation("Home controller index start");
 
             // 宣告類別
             // 刪除直接宣告
@@ -72,6 +77,7 @@ namespace WazeCredit.Controllers
                     homeVM.MarketForecast = "Apply for a credit card using our application!";
                     break;
             }
+            _logger.LogInformation("Home controller index End");
             return View(homeVM);
         }
 
