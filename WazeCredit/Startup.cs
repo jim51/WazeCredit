@@ -49,8 +49,11 @@ namespace WazeCredit
 
             /// 增加IMarketForecaster注入服務
             services.AddTransient<IMarketForecaster, MarketForecasterV2>();
-            /// TryAddTransient增加IMarketForecaster注入服務(如果沒有的話) 
-            services.AddTransient<IMarketForecaster, MarketForecaster>();
+            /// 用取代的方式取代前面註冊
+            services.Replace(ServiceDescriptor.Transient<IMarketForecaster, MarketForecaster>());
+
+            /// 刪除前面註冊
+            //services.RemoveAll<IMarketForecaster>();
 
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddRazorPages();
