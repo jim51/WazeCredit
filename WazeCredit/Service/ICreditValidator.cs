@@ -6,9 +6,8 @@ using WazeCredit.Models;
 
 namespace WazeCredit.Service
 {
-    public interface IValidateionChecker
+    public interface ICreditValidator
     {
-        bool ValidatorLogic(CreditApplication model);
-        string ErrorMessage { get; }
+        Task<(bool, IEnumerable<string>)> PassAllValidations(CreditApplication model);
     }
 }

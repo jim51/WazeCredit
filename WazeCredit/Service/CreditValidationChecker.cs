@@ -12,7 +12,11 @@ namespace WazeCredit.Service
 
         public bool ValidatorLogic(CreditApplication model)
         {
-            if(model.PostalCode<=0 || model.PostalCode >= 99999)
+            if (DateTime.Now.AddYears(-18) < model.DOB)
+            {
+                return false;
+            }
+            if (model.Salary < 10000)
             {
                 return false;
             }
