@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WazeCredit.Models;
+using WazeCredit.Models.ViewModels;
+using WazeCredit.Service;
 
 namespace WazeCredit.Controllers
 {
@@ -13,7 +15,28 @@ namespace WazeCredit.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            HomeVM homeVM = new HomeVM();
+            // 宣告類別
+            MarketForecaster marketForecaster = new MarketForecaster();
+            // 取得資料
+            MarketResult currentMarket = marketForecaster.GetMarketPrediction();
+
+            switch (currentMarket.MarketCondition)
+            {
+                case MarketCondition.StableUp:
+                    homeVM.MarketForecast = "市場穩定上升";
+                    break;
+                case MarketCondition.StableDown:
+                    homeVM.MarketForecast = "市場穩定下降";
+                    break;
+                case MarketCondition.Volatile:
+                    homeVM.MarketForecast = "市場波動";
+                    break;
+                default:
+                    homeVM.MarketForecast = "Apply for a credit card using our application!";
+                    break;
+            }
+            return View(homeVM);
         }
 
         public IActionResult Privacy()
