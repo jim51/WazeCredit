@@ -44,50 +44,9 @@ namespace WazeCredit
 
 
 
-            services.AddAppSettingsConfig(Configuration);
+            services.AddAppSettingsConfig(Configuration).AddAllServices();
 
-            //services.AddScoped<IValidateionChecker, AddressValidationChecker>();
-            //services.AddScoped<IValidateionChecker, CreditValidationChecker>();
-            // 改用TryAddEnumerable避免重複註冊
-            //services.TryAddEnumerable(ServiceDescriptor.Scoped<IValidateionChecker,AddressValidationChecker>());
-            //services.TryAddEnumerable(ServiceDescriptor.Scoped<IValidateionChecker, CreditValidationChecker>());
-            // 改用TryAddEnumerable避免重複註冊=>更優雅寫的法
-            services.TryAddEnumerable(new[]
-            {
-                ServiceDescriptor.Scoped<IValidateionChecker,AddressValidationChecker>(),
-                ServiceDescriptor.Scoped<IValidateionChecker, CreditValidationChecker>()
-            });
-
-            services.AddScoped<ICreditValidator, CreditValidator>();
-
-            services.AddTransient<TransientService>();
-            services.AddSingleton<SingletionService>();
-            services.AddScoped<ScopedService>();
-
-            services.AddScoped<CreditApprovedLow>();
-            services.AddScoped<CreditApprovedHigh>();
-
-            services.AddScoped<Func<CreditApprovedEnum, ICreditApproved>>(ServiceProvider => range =>
-                {
-                    switch (range)
-                    {
-                        case CreditApprovedEnum.Low:
-                            return ServiceProvider.GetService<CreditApprovedLow>();
-                        case CreditApprovedEnum.High:
-                            return ServiceProvider.GetService<CreditApprovedHigh>();
-                        default:
-                            return ServiceProvider.GetService<CreditApprovedLow>();
-                    };
-                }
-            );
-
-            /// 增加IMarketForecaster注入服務
-            services.AddTransient<IMarketForecaster, MarketForecasterV2>();
-            /// 用取代的方式取代前面註冊
-            services.Replace(ServiceDescriptor.Transient<IMarketForecaster, MarketForecaster>());
-
-            /// 刪除前面註冊
-            //services.RemoveAll<IMarketForecaster>();
+            
 
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddRazorPages();
