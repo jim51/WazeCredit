@@ -12,6 +12,7 @@ using WazeCredit.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WazeCredit.Service;
 
 namespace WazeCredit
 {
@@ -32,6 +33,10 @@ namespace WazeCredit
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            /// 增加IMarketForecaster注入服務
+            services.AddTransient<IMarketForecaster, MarketForecaster>();
+
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddRazorPages();
         }
