@@ -5,23 +5,41 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using WazeCredit.Model;
 using WazeCredit.Models;
 using WazeCredit.Models.ViewModels;
 using WazeCredit.Service;
+using WazeCredit.Utiltity.AppSettingsClasses;
 
 namespace WazeCredit.Controllers
 {
     public class HomeController : Controller
     {
         public HomeVM homeVM { get; set; }
+
+
         /// 設置interface參數
         /// 設置為唯讀以避免被修改
         private readonly IMarketForecaster _marketForecaster;
-        public HomeController(IMarketForecaster marketForecaster)
+        private readonly StripeSettings _stripeOptions;
+        private readonly TwilioSettings _twilioOptions;
+        private readonly SendGridSettings _sendGridOptions;
+        private readonly WazeForecastSettings _wazeForccastOptions;
+
+        public HomeController(IMarketForecaster marketForecaster,
+            IOptions<StripeSettings> stripeOptions,
+            IOptions<TwilioSettings> twilioOptions,
+            IOptions<SendGridSettings> sendGridOptions,
+            IOptions<WazeForecastSettings> wazeForccastOptions
+            )
         {
             homeVM = new HomeVM();
             _marketForecaster = marketForecaster;
+            _stripeOptions = stripeOptions.Value;
+            _twilioOptions = twilioOptions.Value;
+            _sendGridOptions = sendGridOptions.Value;
+            _wazeForccastOptions = wazeForccastOptions.Value;
         }
 
         public IActionResult Index()
@@ -51,6 +69,19 @@ namespace WazeCredit.Controllers
                     break;
             }
             return View(homeVM);
+        }
+
+        public IActionResult AllConfigSettings()
+        {
+            List<string> messages = new List<string>();
+            messages.Add($"Waze config - Forecast Tracker: " + _wazeForccastOptions.ForecastTrackerEnabled);
+            messages.Add($"Stripe Publishable Key: " + _stripeOptions.PublishableKey);
+            messages.Add($"Stripe Secret Key: " + _stripeOptions.SecretKey);
+            messages.Add($"Send Grid Key: " + _sendGridOptions.SendGridKey);
+            messages.Add($"Twilio Phone: " + _twilioOptions.PhoneNumber);
+            messages.Add($"Twilio SID: " + _twilioOptions.AccountSid);
+            messages.Add($"Twilio Token: " + _twilioOptions.AuthToken);
+            return View(messages);
         }
 
         public IActionResult Privacy()
