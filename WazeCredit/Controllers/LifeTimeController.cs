@@ -31,9 +31,9 @@ namespace WazeCredit.Controllers
                 HttpContext.Items["CustomMiddlewareTransient"].ToString(),
                 $"Transient Controller - {_transientService.GetGuid()}",
                 HttpContext.Items["CustomMiddlewareScoped"].ToString(),
-                $"Scoped Controller - {_transientService.GetGuid()}",
+                $"Scoped Controller - {_scopedService.GetGuid()}",
                 HttpContext.Items["CustomMiddlewareSingletion"].ToString(),
-                $"Singletion Controller - {_transientService.GetGuid()}",
+                $"Singletion Controller - {_singletionService.GetGuid()}",
             };
 
             return View(messages);
