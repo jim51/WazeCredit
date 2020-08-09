@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using WazeCredit.Model;
 using WazeCredit.Models;
 using WazeCredit.Models.ViewModels;
 using WazeCredit.Service;
@@ -17,7 +18,7 @@ namespace WazeCredit.Controllers
         {
             HomeVM homeVM = new HomeVM();
             // 宣告類別
-            MarketForecaster marketForecaster = new MarketForecaster();
+            MarketForecasterV2 marketForecaster = new MarketForecasterV2();
             // 取得資料
             MarketResult currentMarket = marketForecaster.GetMarketPrediction();
 
