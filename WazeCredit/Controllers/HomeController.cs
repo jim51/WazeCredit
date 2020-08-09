@@ -14,22 +14,26 @@ namespace WazeCredit.Controllers
 {
     public class HomeController : Controller
     {
-
-
         public HomeVM homeVM { get; set; }
-
-        public HomeController()
+        /// 設置interface參數
+        /// 設置為唯讀以避免被修改
+        private readonly IMarketForecaster _marketForecaster;
+        public HomeController(IMarketForecaster marketForecaster)
         {
             homeVM = new HomeVM();
+            _marketForecaster = marketForecaster;
         }
 
         public IActionResult Index()
         {
             
             // 宣告類別
-            MarketForecasterV2 marketForecaster = new MarketForecasterV2();
+            // 刪除直接宣告
+            //MarketForecasterV2 marketForecaster = new MarketForecasterV2();
+
             // 取得資料
-            MarketResult currentMarket = marketForecaster.GetMarketPrediction();
+            // 取得資料改由
+            MarketResult currentMarket = _marketForecaster.GetMarketPrediction();
 
             switch (currentMarket.MarketCondition)
             {
