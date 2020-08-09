@@ -39,8 +39,7 @@ namespace WazeCredit
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            /// 增加IMarketForecaster注入服務
-            services.AddTransient<IMarketForecaster, MarketForecasterV2>();
+          
 
             services.AddAppSettingsConfig(Configuration);
 
@@ -48,8 +47,10 @@ namespace WazeCredit
             services.AddSingleton<SingletionService>();
             services.AddScoped<ScopedService>();
 
+            /// 增加IMarketForecaster注入服務
+            services.AddTransient<IMarketForecaster, MarketForecasterV2>();
             /// TryAddTransient增加IMarketForecaster注入服務(如果沒有的話) 
-            services.TryAddTransient<IMarketForecaster, MarketForecasterV2>();
+            services.AddTransient<IMarketForecaster, MarketForecaster>();
 
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddRazorPages();
