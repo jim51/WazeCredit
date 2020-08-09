@@ -43,8 +43,18 @@ namespace WazeCredit
 
             services.AddAppSettingsConfig(Configuration);
 
-            services.AddScoped<IValidateionChecker, AddressValidationChecker>();
-            services.AddScoped<IValidateionChecker, CreditValidationChecker>();
+            //services.AddScoped<IValidateionChecker, AddressValidationChecker>();
+            //services.AddScoped<IValidateionChecker, CreditValidationChecker>();
+            // 改用TryAddEnumerable避免重複註冊
+            //services.TryAddEnumerable(ServiceDescriptor.Scoped<IValidateionChecker,AddressValidationChecker>());
+            //services.TryAddEnumerable(ServiceDescriptor.Scoped<IValidateionChecker, CreditValidationChecker>());
+            // 改用TryAddEnumerable避免重複註冊=>更優雅寫的法
+            services.TryAddEnumerable(new[]
+            {
+                ServiceDescriptor.Scoped<IValidateionChecker,AddressValidationChecker>(),
+                ServiceDescriptor.Scoped<IValidateionChecker, CreditValidationChecker>()
+            });
+
             services.AddScoped<ICreditValidator, CreditValidator>();
 
             services.AddTransient<TransientService>();
