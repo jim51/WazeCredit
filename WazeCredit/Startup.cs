@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WazeCredit.Service;
+using WazeCredit.Utiltity.AppSettingsClasses;
 
 namespace WazeCredit
 {
@@ -36,6 +37,12 @@ namespace WazeCredit
 
             /// 增加IMarketForecaster注入服務
             services.AddTransient<IMarketForecaster, MarketForecaster>();
+
+            services.Configure<WazeForecastSettings>(Configuration.GetSection("WazeForecast"));
+            services.Configure<StripeSettings>(Configuration.GetSection("Stripe"));
+            services.Configure<SendGridSettings>(Configuration.GetSection("SendGrid"));
+            services.Configure<TwilioSettings>(Configuration.GetSection("Twilio"));
+
 
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddRazorPages();
