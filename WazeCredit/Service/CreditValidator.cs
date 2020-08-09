@@ -26,11 +26,6 @@ namespace WazeCredit.Service
                     errorMessages.Add(item.ErrorMessage);
                     validationPassed = false;
                 }
-                if (!item.ValidatorLogic(model))
-                {
-                    errorMessages.Add(item.ErrorMessage);
-                    validationPassed = false;
-                }
             }
             return (validationPassed, errorMessages);
         }

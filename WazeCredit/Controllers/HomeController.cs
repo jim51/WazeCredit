@@ -19,7 +19,7 @@ namespace WazeCredit.Controllers
         public HomeVM homeVM { get; set; }
 
         [BindProperty]
-        private CreditApplication CreditModel { get; set; }
+        public CreditApplication CreditModel { get; set; }
 
         /// 設置interface參數
         /// 設置為唯讀以避免被修改
