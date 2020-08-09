@@ -7,7 +7,7 @@ using WazeCredit.Models;
 
 namespace WazeCredit.Service
 {
-    public class MarketForecaster
+    public class MarketForecaster : IMarketForecaster
     {
         public MarketResult GetMarketPrediction()
         {
