@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WazeCredit.Data.Repository;
+using WazeCredit.Data.Repository.IRepository;
 using WazeCredit.Models;
 using WazeCredit.Service;
 using WazeCredit.Service.LifeTimeExample;
@@ -35,7 +37,7 @@ namespace WazeCredit.Utiltity.DI_Config
 
             services.AddScoped<CreditApprovedLow>();
             services.AddScoped<CreditApprovedHigh>();
-
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<Func<CreditApprovedEnum, ICreditApproved>>(ServiceProvider => range =>
             {
                 switch (range)

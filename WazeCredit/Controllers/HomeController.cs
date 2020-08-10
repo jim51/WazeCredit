@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using WazeCredit.Data;
+using WazeCredit.Data.Repository.IRepository;
 using WazeCredit.Model;
 using WazeCredit.Models;
 using WazeCredit.Models.ViewModels;
@@ -27,6 +28,7 @@ namespace WazeCredit.Controllers
         private readonly IMarketForecaster _marketForecaster;
         private readonly ICreditValidator _creditValidator;
         private readonly ApplicationDbContext _db;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger _logger;
 
         //private readonly StripeSettings _stripeOptions;
@@ -38,7 +40,8 @@ namespace WazeCredit.Controllers
         public HomeController(IMarketForecaster marketForecaster, IOptions<WazeForecastSettings> wazeForccastOptions,
                 ICreditValidator creditValidator,
                 ApplicationDbContext applicationDbContext,
-                ILogger<HomeController> logger
+                ILogger<HomeController> logger,
+                IUnitOfWork unitOfWork
             )
         {
             homeVM = new HomeVM();
@@ -47,6 +50,7 @@ namespace WazeCredit.Controllers
             _wazeForccastOptions = wazeForccastOptions.Value;
             _creditValidator = creditValidator;
             _db = applicationDbContext;
+            _unitOfWork = unitOfWork;
            
         }
 
@@ -127,8 +131,8 @@ namespace WazeCredit.Controllers
                     CreditModel.CreditApproved = 
                         _creditService(CreditModel.Salary > 50000 ? CreditApprovedEnum.High : CreditApprovedEnum.Low)
                         .GetCreditApproved(CreditModel);
-                    _db.CreditApplication.Add(CreditModel);
-                    _db.SaveChanges();
+                    _unitOfWork.CreditApplication.Add(CreditModel);
+                    _unitOfWork.Save();
                     creditResult.CreditID = CreditModel.Id;
                     creditResult.CreditApproved = CreditModel.CreditApproved;
                     return RedirectToAction(nameof(CreditResult),creditResult);
