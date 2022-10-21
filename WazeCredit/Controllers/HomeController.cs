@@ -51,7 +51,7 @@ namespace WazeCredit.Controllers
             _creditValidator = creditValidator;
             _db = applicationDbContext;
             _unitOfWork = unitOfWork;
-           
+
         }
 
         public IActionResult Index()
@@ -113,7 +113,7 @@ namespace WazeCredit.Controllers
         [HttpPost]
         [ActionName("CreditApplication")]
         public async Task<IActionResult> CreditApplicationPOST(
-            [FromServices] Func<CreditApprovedEnum,ICreditApproved> _creditService
+            [FromServices] Func<CreditApprovedEnum, ICreditApproved> _creditService
             )
         {
             if (ModelState.IsValid)
@@ -128,14 +128,14 @@ namespace WazeCredit.Controllers
                 };
                 if (validationPassed)
                 {
-                    CreditModel.CreditApproved = 
+                    CreditModel.CreditApproved =
                         _creditService(CreditModel.Salary > 50000 ? CreditApprovedEnum.High : CreditApprovedEnum.Low)
                         .GetCreditApproved(CreditModel);
                     _unitOfWork.CreditApplication.Add(CreditModel);
                     _unitOfWork.Save();
                     creditResult.CreditID = CreditModel.Id;
                     creditResult.CreditApproved = CreditModel.CreditApproved;
-                    return RedirectToAction(nameof(CreditResult),creditResult);
+                    return RedirectToAction(nameof(CreditResult), creditResult);
                 }
                 else
                 {
